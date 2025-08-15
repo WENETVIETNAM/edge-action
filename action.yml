@@ -1,0 +1,83 @@
+name: 'Edge Service Action'
+description: 'GitHub Actions plugin for Edge Service Platform package management and deployment'
+author: 'WENet'
+
+inputs:
+  api_token:
+    description: 'Bearer token for API authentication'
+    required: true
+  workflow:
+    description: 'Comma-separated workflow steps (e.g., "upload", "deploy", "upload,deploy")'
+    required: true
+  base_url:
+    description: 'Platform base URL'
+    required: false
+    default: 'https://skillx.cloud'
+  
+  # Package-related inputs
+  package_path:
+    description: 'Path to the directory/files to package'
+    required: false
+  package_name:
+    description: 'Name for the package'
+    required: false
+  package_tag:
+    description: 'Version tag for the package'
+    required: false
+  
+  # Deployment-related inputs
+  node_ids:
+    description: 'Comma-separated string or array of node UUIDs to deploy to'
+    required: false
+  
+  # Registry-related inputs (future feature)
+  registry_url:
+    description: 'Container registry URL (future feature)'
+    required: false
+  registry_username:
+    description: 'Registry authentication username (future feature)'
+    required: false
+  registry_password:
+    description: 'Registry authentication password (future feature)'
+    required: false
+  
+  # Optional packaging inputs
+  include_patterns:
+    description: 'Comma-separated glob patterns for files to include'
+    required: false
+  exclude_patterns:
+    description: 'Comma-separated glob patterns for files to exclude'
+    required: false
+
+outputs:
+  # Upload outputs
+  upload_package_id:
+    description: 'ID of the uploaded package'
+  upload_package_url:
+    description: 'URL of the uploaded package file'
+  upload_status:
+    description: 'Upload success/failure status'
+  upload_was_updated:
+    description: 'Boolean indicating if existing package was updated (true) or new package was created (false)'
+  
+  # Deployment outputs
+  deploy_deployment_ids:
+    description: 'JSON array of created deployment IDs'
+  deploy_deployment_summary:
+    description: 'JSON object with deployment results per node'
+  deploy_status:
+    description: 'Overall deployment status'
+  
+  # Push outputs (future feature)
+  push_registry_url:
+    description: 'Registry URL where package was pushed'
+  push_status:
+    description: 'Push success/failure status'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+
+branding:
+  icon: 'cloud'
+  color: 'blue'
