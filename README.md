@@ -130,8 +130,8 @@ jobs:
 | `package_path` | Path to the directory/files to package |
 | `package_name` | Name for the package |
 | `package_tag` | Version tag for the package |
-| `include_patterns` | Comma-separated glob patterns for files to include |
-| `exclude_patterns` | Comma-separated glob patterns for files to exclude |
+| `include_patterns` | Comma-separated glob patterns for files to include (defaults to all files if not specified) |
+| `exclude_patterns` | Comma-separated glob patterns for files to exclude (defaults to all files if not specified) |
 
 ### Deployment-related Inputs
 *Required when workflow includes `deploy`*

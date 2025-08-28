@@ -163,7 +163,10 @@ class EdgeServiceAction:
                                 tar.add(file_path, arcname=arcname)
                 else:
                     # Include all files
-                    tar.add(package_path, arcname='.')
+                    for file_path in package_path.rglob('*'):
+                        if file_path.is_file():
+                            arcname = file_path.relative_to(package_path)
+                            tar.add(file_path, arcname=arcname)
             
             return tmp_file.name
     
