@@ -1,6 +1,6 @@
-# Edge Service GitHub Action
+# Edge Action
 
-A GitHub Actions plugin that abstracts the Edge Service Platform's OpenAPI endpoints for package management and deployment. This action enables you to package, upload, and deploy applications to edge nodes using modular workflows.
+A GitHub Actions plugin that abstracts the Edge Platform's OpenAPI endpoints for package management and deployment. This action enables you to package, upload, and deploy applications to edge nodes using modular workflows.
 
 ## Features
 
@@ -20,9 +20,9 @@ A GitHub Actions plugin that abstracts the Edge Service Platform's OpenAPI endpo
 - name: Upload Package
   uses: WENETVIETNAM/edge-action@main
   with:
-    api_token: ${{ secrets.EDGE_SERVICE_TOKEN }}
+    api_token: ${{ secrets.EDGE_PLATFORM_TOKEN }}
     workflow: 'upload'
-    base_url: 'https://skillx.cloud'
+    base_url: 'https://wenet.cloud'
     package_path: './dist'
     package_name: 'my-app'
     package_tag: 'v1.0.0'
@@ -34,9 +34,9 @@ A GitHub Actions plugin that abstracts the Edge Service Platform's OpenAPI endpo
 - name: Deploy Package
   uses: WENETVIETNAM/edge-action@main
   with:
-    api_token: ${{ secrets.EDGE_SERVICE_TOKEN }}
+    api_token: ${{ secrets.EDGE_PLATFORM_TOKEN }}
     workflow: 'deploy'
-    base_url: 'https://skillx.cloud'
+    base_url: 'https://wenet.cloud'
     package_name: 'my-app'
     package_tag: 'v1.0.0'
     node_ids: 'bc9ebeb1-96a4-4dfd-953e-899a61637577,dd8fef2a-45b6-4c8e-9f21-123456789abc'
@@ -47,11 +47,11 @@ A GitHub Actions plugin that abstracts the Edge Service Platform's OpenAPI endpo
 - name: Upload and Deploy Package
   uses: WENETVIETNAM/edge-action@main
   with:
-    api_token: ${{ secrets.EDGE_SERVICE_TOKEN }}
+    api_token: ${{ secrets.EDGE_PLATFORM_TOKEN }}
     workflow: 'upload,deploy'
-    base_url: 'https://staging.skillx.cloud'
+    base_url: 'https://wenet.cloud'
     package_path: './build'
-    package_name: 'my-service'
+    package_name: 'my-package'
     package_tag: ${{ github.sha }}
     include_patterns: '*.py,*.json,requirements.txt'
     node_ids: 'bc9ebeb1-96a4-4dfd-953e-899a61637577'
@@ -87,12 +87,12 @@ jobs:
     - name: Build application
       run: npm run build
       
-    - name: Deploy to Edge Service
+    - name: Deploy to Edge Platform
       uses: WENETVIETNAM/edge-action@main
       with:
-        api_token: ${{ secrets.EDGE_SERVICE_TOKEN }}
+        api_token: ${{ secrets.EDGE_PLATFORM_TOKEN }}
         workflow: 'upload,deploy'
-        base_url: 'https://skillx.cloud'
+        base_url: 'https://wenet.cloud'
         package_path: './dist'
         package_name: 'my-webapp'
         package_tag: ${{ github.sha }}
@@ -120,7 +120,7 @@ jobs:
 
 | Input | Description | Default |
 |-------|-------------|---------|
-| `base_url` | Platform base URL | `https://skillx.cloud` |
+| `base_url` | Platform base URL | `https://wenet.cloud` |
 
 ### Package-related Inputs
 *Required when workflow includes `upload`*
@@ -216,8 +216,8 @@ The action includes comprehensive error handling:
 
 ### Base URLs
 
-- **Production**: `https://skillx.cloud`
-- **Staging**: `https://staging.skillx.cloud`
+- **Production**: `https://wenet.cloud`
+- **Staging**: `https://skillx.cloud`
 - **Development**: `http://localhost:8000`
 
 ### Runners
@@ -231,11 +231,11 @@ Tested and supported on:
 
 ## API Endpoints
 
-This action uses the following Edge Service API endpoints:
+This action uses the following Edge Platform API endpoints:
 
-- `POST /public/edge-service/open-api/v1/packages/` - Package upload
-- `GET /public/edge-service/open-api/v1/packages/` - Package search
-- `POST /public/edge-service/open-api/v1/deployments/` - Create deployment
+- `POST /public/sun/open-api/v1/packages/` - Package upload
+- `GET /public/sun/open-api/v1/packages/` - Package search
+- `POST /public/sun/open-api/v1/deployments/` - Create deployment
 
 ## Security
 
@@ -249,7 +249,7 @@ This action uses the following Edge Service API endpoints:
 ### Common Issues
 
 1. **"API token is required"**
-   - Ensure `EDGE_SERVICE_TOKEN` is set in repository secrets
+   - Ensure `EDGE_PLATFORM_TOKEN` is set in repository secrets
    - Verify the secret name matches your workflow file
 
 2. **"Package path does not exist"**
@@ -293,5 +293,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For issues and questions:
 - Create an issue in this repository
-- Check the Edge Service Platform documentation
-- Contact support at support@skillx.cloud
+- Check the Edge Platform documentation
+- Contact support at support@wenet.cloud

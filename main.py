@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Edge Service GitHub Action
-A GitHub Actions plugin for Edge Service Platform package management and deployment.
+Edge Platform GitHub Action
+A GitHub Actions plugin for Edge Platform package management and deployment.
 """
 
 import os
@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 
 
-class EdgeServiceAction:
+class EdgePlatformAction:
     def __init__(self):
         self.api_token = os.getenv('INPUT_API_TOKEN')
         self.workflow = os.getenv('INPUT_WORKFLOW', '')
@@ -209,7 +209,7 @@ class EdgeServiceAction:
     
     def upload_package_to_api(self, package_file: str) -> Dict[str, Any]:
         """Upload package to the API with upsert functionality"""
-        url = f"{self.base_url}/public/edge-service/open-api/v1/packages/"
+        url = f"{self.base_url}/public/sun/open-api/v1/packages/"
         
         headers = {
             'Authorization': f'Bearer {self.api_token}',
@@ -290,7 +290,7 @@ class EdgeServiceAction:
     
     def get_package_id_by_name_tag(self) -> int:
         """Retrieve package ID by name and tag"""
-        url = f"{self.base_url}/public/edge-service/open-api/v1/packages/"
+        url = f"{self.base_url}/public/sun/open-api/v1/packages/"
         
         headers = {
             'Authorization': f'Bearer {self.api_token}',
@@ -315,7 +315,7 @@ class EdgeServiceAction:
     
     def deploy_to_node(self, package_id: int, node_id: str) -> Dict[str, Any]:
         """Deploy package to a specific node"""
-        url = f"{self.base_url}/public/edge-service/open-api/v1/deployments/"
+        url = f"{self.base_url}/public/sun/open-api/v1/deployments/"
         
         headers = {
             'Authorization': f'Bearer {self.api_token}',
@@ -399,7 +399,7 @@ class EdgeServiceAction:
     def run(self):
         """Main execution method"""
         try:
-            self.log("Starting Edge Service Action")
+            self.log("Starting Edge Action")
             self.log(f"Workflow: {self.workflow}")
             self.log(f"Base URL: {self.base_url}")
             
@@ -419,12 +419,12 @@ class EdgeServiceAction:
                 elif workflow_step == 'push':
                     self.set_output('push_status', result.get('status', 'skipped'))
             
-            self.log("Edge Service Action completed successfully")
+            self.log("Edge Action completed successfully")
             
         except Exception as e:
             self.error(f"Action failed: {str(e)}")
 
 
 if __name__ == "__main__":
-    action = EdgeServiceAction()
+    action = EdgePlatformAction()
     action.run()

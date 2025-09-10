@@ -1,5 +1,5 @@
-name: 'Edge Service Action'
-description: 'GitHub Actions plugin for Edge Service Platform package management and deployment'
+name: 'Edge Action'
+description: 'GitHub Actions plugin for Edge Platform package management and deployment'
 author: 'WENet'
 
 inputs:
@@ -12,7 +12,7 @@ inputs:
   base_url:
     description: 'Platform base URL'
     required: false
-    default: 'https://skillx.cloud'
+    default: 'https://wenet.cloud'
   
   # Package-related inputs
   package_path:

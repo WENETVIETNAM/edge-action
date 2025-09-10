@@ -272,7 +272,7 @@ tags
 dump.rdb
 
 ### Project template
-edge_service/uploads/
+sun/uploads/
 
 .pytest_cache/
 .ipython/
