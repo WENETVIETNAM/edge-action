@@ -272,8 +272,8 @@ class EdgePlatformAction:
 
             # Parse node IDs
             if self.all_nodes:
-                self.log("Fetching all node IDs from API")
                 node_id_list = self.fetch_all_node_ids()
+                self.log(f"Fetching all node IDs from API: {node_id_list}")
             else:
                 self.log(f"Using specified node IDs: {self.node_ids}")
                 node_id_list = [node_id.strip() for node_id in self.node_ids.split(",")]
