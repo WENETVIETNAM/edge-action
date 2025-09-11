@@ -20,6 +20,7 @@ class EdgePlatformAction:
         self.api_token = os.getenv("INPUT_API_TOKEN")
         self.workflow = os.getenv("INPUT_WORKFLOW", "")
         self.base_url = os.getenv("INPUT_BASE_URL")
+        self.sun_url = os.getenv("INPUT_SUN_URL")
 
         # Package inputs
         self.package_path = os.getenv("INPUT_PACKAGE_PATH")
@@ -28,7 +29,7 @@ class EdgePlatformAction:
 
         # Deployment inputs
         self.node_ids = os.getenv("INPUT_NODE_IDS")
-        self.all_nodes = os.getenv("INPUT_ALL_NODES", "false").lower()
+        self.all_nodes: bool = os.getenv("INPUT_ALL_NODES", "false").lower() == "true"
 
         # Registry inputs (future)
         self.registry_url = os.getenv("INPUT_REGISTRY_URL")
@@ -61,8 +62,8 @@ class EdgePlatformAction:
 
         # Validate deployment inputs
         if "deploy" in workflow_steps:
-            if not self.node_ids:
-                self.error("node_ids is required for deploy workflow")
+            if not self.node_ids and not self.all_nodes:
+                self.error("node_ids or all_nodes is required for deploy workflow")
             if not self.package_name or not self.package_tag:
                 self.error(
                     "package_name and package_tag are required for deploy workflow"
@@ -270,7 +271,12 @@ class EdgePlatformAction:
                 self.log(f"Retrieved package ID by name/tag: {package_id}")
 
             # Parse node IDs
-            node_id_list = [node_id.strip() for node_id in self.node_ids.split(",")]
+            if self.all_nodes:
+                self.log("Fetching all node IDs from API")
+                node_id_list = self.fetch_all_node_ids()
+            else:
+                self.log(f"Using specified node IDs: {self.node_ids}")
+                node_id_list = [node_id.strip() for node_id in self.node_ids.split(",")]
 
             # Deploy to each node
             deployment_results = []
@@ -306,6 +312,41 @@ class EdgePlatformAction:
         except Exception as e:
             self.error(f"Deployment failed: {str(e)}")
             return {"status": "failed", "error": str(e)}
+
+    def fetch_all_node_ids(self) -> List[str]:
+        """Fetch all node IDs from API with pagination support"""
+        all_node_ids = []
+        url = f"{self.base_url}/public/sun/open-api/v1/nodes/"
+        headers = {
+            "Authorization": f"Bearer {self.api_token}",
+            "Accept": "application/json",
+        }
+        
+        while url:
+            response = self.make_request_with_retry("GET", url, headers=headers)
+            
+            if response.status_code == 200:
+                result = response.json()
+                
+                # Extract node_ids from current page
+                for node in result.get("results", []):
+                    node_id = node.get("node_id")
+                    if node_id:
+                        all_node_ids.append(node_id)
+                
+                # Get next page URL
+                url = result.get("next")
+                
+                if url and result.get("count", 0) > len(all_node_ids):
+                    self.log(f"Fetching next page... ({len(all_node_ids)}/{result['count']} nodes)")
+                    
+            else:
+                raise Exception(
+                    f"Failed to fetch nodes with status {response.status_code}: {response.text}"
+                )
+        
+        self.log(f"Retrieved {len(all_node_ids)} node IDs total")
+        return all_node_ids
 
     def get_package_id_by_name_tag(self) -> int:
         """Retrieve package ID by name and tag"""

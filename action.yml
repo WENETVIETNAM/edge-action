@@ -13,6 +13,10 @@ inputs:
     description: 'Platform base URL'
     required: false
     default: 'https://wenet.cloud'
+  sun_url:
+    description: 'Sun Service URL'
+    required: false
+    default: 'https://sun.wenet.cloud'
   
   # Package-related inputs
   package_path:
